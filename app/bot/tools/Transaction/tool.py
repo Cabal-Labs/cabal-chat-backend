@@ -63,7 +63,7 @@ class TransactionTool(BaseTool):
         "To use this tool: You should pass in a valid json which contains a key value for from_token_name, to_token_name, amount, chain_name."
         "When you pass the json in, make sure its a string. Do not include ```json```"
         "Use this tool to make transactions."
-        "You do not need to check current prices in order to do a swap. Just do this tool first if the user mentions a swap."
+        "You do not need to check current prices in order to do a swap. Just do this tool first if the user mentions a swap. Even if its axlUSDT"
         "You must return JSON and this JSON must go to the user directly."
     )
     globals: Optional[Dict] = Field(default_factory=dict)
@@ -128,11 +128,19 @@ class TransactionTool(BaseTool):
             print(calldata_swap)
             
             
+
+
+            
+            
             RETURN_OBJECT = {
                 "from_name": from_token_info['symbol'],
                 "to_name": to_token_info['symbol'],
-                "from_amount": query['amount']
+                "from_amount": query['amount'],
+                "callDataForApproval":calldata_approve,
+                "calldata_swap":calldata_swap
             }
+            
+ 
             
             return RETURN_OBJECT
 
