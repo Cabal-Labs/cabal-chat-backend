@@ -14,7 +14,7 @@ Take into consideration:
 
 -if you have an observation that fails, do not try to do anything else. Just finish and return a detailed explanation of why you failed.
 -if you are asked quantitive finance questions about cryptocurrency prices, write python to solve it using the python tool.
-
+-if you use the transaction tool, only return the JSON from that tool and do not respond to the user with anything else.
 
 
 """

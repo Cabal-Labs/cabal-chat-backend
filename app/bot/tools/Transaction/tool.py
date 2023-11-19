@@ -42,6 +42,7 @@ def clean_json(json_input):
         # Remove leading/trailing white spaces
         json_string = json_input.strip()
         # Parse JSON string to dictionary
+        print(json_string)
         json_dict = json.loads(json_string)
         return json_dict
     except json.JSONDecodeError:
@@ -58,10 +59,12 @@ class TransactionTool(BaseTool):
 
     name: str = "transaction"
     description: str = (
-        "This tool enables the ai agent to make transactions on a blockchain"
+        "This tool enables the ai agent to make transactions on a blockchain. This makes transactions on the base blockchain."
         "To use this tool: You should pass in a valid json which contains a key value for from_token_name, to_token_name, amount, chain_name."
         "When you pass the json in, make sure its a string. Do not include ```json```"
         "Use this tool to make transactions."
+        "You do not need to check current prices in order to do a swap. Just do this tool first if the user mentions a swap."
+        "You must return JSON and this JSON must go to the user directly."
     )
     globals: Optional[Dict] = Field(default_factory=dict)
     locals: Optional[Dict] = Field(default_factory=dict)
@@ -114,12 +117,24 @@ class TransactionTool(BaseTool):
             edited_amount_with_decimals = query['amount'] * 10 ** from_token_info['decimals']
         
             print("amount", edited_amount_with_decimals)
-            
+            sleep(1)
+            print("generating the calldata for the approval")
             calldata_approve = generateCallDataForApprove(from_token_address,edited_amount_with_decimals)
             print(calldata_approve)
             
+            print("===========================================")
+            sleep(1)
             calldata_swap = generateCallDataForSwap(from_token_address,to_token_address, edited_amount_with_decimals, wallet_address)
             print(calldata_swap)
+            
+            
+            RETURN_OBJECT = {
+                "from_name": from_token_info['symbol'],
+                "to_name": to_token_info['symbol'],
+                "from_amount": query['amount']
+            }
+            
+            return RETURN_OBJECT
 
         except Exception as e:
             return "{}: {}".format(type(e).__name__, str(e))

@@ -3,11 +3,18 @@ import json
 from time import sleep
 import os
 
+CHAIN_ID_TO_USE = 8453
+FORCE_USE_THIS = True
+
+
 def parse_response(response_text):
     return json.loads(response_text)
 
 def fetch_token_data(query, chain_id):
 
+    if FORCE_USE_THIS:
+        chain_id = CHAIN_ID_TO_USE
+        
     apiUrl = f"https://api.1inch.dev/token/v1.2/{chain_id}/search"
     requestOptions = {
         "headers": {
@@ -32,16 +39,17 @@ def fetch_token_data(query, chain_id):
     return data[0]
 
 
-def generateCallDataForApprove(from_address, amount):
+def generateCallDataForApprove(from_token_address, amount):
 
-    apiUrl = "https://api.1inch.dev/swap/v5.2/1/approve/transaction"
+        
+    apiUrl = f"https://api.1inch.dev/swap/v5.2/{CHAIN_ID_TO_USE}/approve/transaction"
     requestOptions = {
         "headers": {
     "Authorization": "Bearer " + os.environ.get('ONEINCH_API_KEY')
     },
         "body": {},
         "params": {
-    "tokenAddress": from_address,
+    "tokenAddress": from_token_address,
     "amount": amount
     }
     }
@@ -56,11 +64,13 @@ def generateCallDataForApprove(from_address, amount):
     
     response_text = response.text
 
-    data = parse_response(response_text)
-    return data
+    print(response_text)
+    #data = parse_response(response_text)
+    return response_text
     
 def generateCallDataForSwap(from_address,to_address, amount, wallet_address):
-    apiUrl = "https://api.1inch.dev/swap/v5.2/1/swap"
+        
+    apiUrl = f"https://api.1inch.dev/swap/v5.2/{CHAIN_ID_TO_USE}/swap"
     requestOptions = {
         "headers": {
     "Authorization": "Bearer " + os.environ.get('ONEINCH_API_KEY')
@@ -69,7 +79,7 @@ def generateCallDataForSwap(from_address,to_address, amount, wallet_address):
         "params": {
     "src": to_address,
     "dst": from_address,
-    "amount": amount,
+    "amount": '1000000000',
     "from": wallet_address,
     "slippage": "1"
     }
@@ -89,6 +99,9 @@ def generateCallDataForSwap(from_address,to_address, amount, wallet_address):
 
 def check_token_balances(chain_id,wallet_address):
 
+    if FORCE_USE_THIS:
+        chain_id = CHAIN_ID_TO_USE
+        
     apiUrl = f"https://api.1inch.dev/balance/v1.2/{chain_id}/balances/{wallet_address}"
     requestOptions = {
         "headers": {
@@ -144,9 +157,13 @@ def check_token_balances(chain_id,wallet_address):
 
         
         
-def get_prices_for_addresses(addresses, chain):
+def get_prices_for_addresses(addresses, chain_id):
     sleep(1)
-    url = f"https://api.1inch.dev/price/v1.1/{chain}/{','.join(addresses)}"
+    
+    if FORCE_USE_THIS:
+        chain_id = CHAIN_ID_TO_USE
+        
+    url = f"https://api.1inch.dev/price/v1.1/{chain_id}/{','.join(addresses)}"
 
     response = requests.get(url,  headers={'Authorization': "Bearer " + os.environ.get('ONEINCH_API_KEY')})
     if response.status_code == 200:

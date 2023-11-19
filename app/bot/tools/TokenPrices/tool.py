@@ -40,10 +40,15 @@ def clean_json(json_input):
         # Check if input is already a dictionary
         if isinstance(json_input, dict):
             return json_input
+        print("here")
         # Remove leading/trailing white spaces
         json_string = json_input.strip()
+        print("Yeet")
         # Parse JSON string to dictionary
+        print(json_string)
+
         json_dict = json.loads(json_string)
+        print("lawl")
         return json_dict
     except json.JSONDecodeError:
         return "Invalid JSON"
@@ -64,7 +69,8 @@ class TokenPricesTool(BaseTool):
         "When you pass the json in, make sure its a string. Do not include ```json```"
         "If you do not have the token_address, you need to get that first. "
         "When giving your response, if the token is USDC, DIA, USDT the user knows that these are stablecoins and thus you do not need to describe how much the stablecoin costs."
-      
+        
+        "When you are asked to look for the eth price, always use weth instead."
     )
     
     globals: Optional[Dict] = Field(default_factory=dict)
@@ -92,12 +98,14 @@ class TokenPricesTool(BaseTool):
         try:
             print("RUNNING THE TOKEN PRICE TOOOL!!!!!")
             
+            print(query)
+
             query=clean_json(query)
             
+            print("YEAHYEAHYEAHYEAHYEAHYEAH")
+            
             print(query)
-            wallet_address = "0x8cF84867ba54bd078F678fb276BB1a103efce7d3"
-       
-    
+            
             response = get_prices_for_addresses(query['token_addresses'],1)
             
             print(response)

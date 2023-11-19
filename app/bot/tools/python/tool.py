@@ -56,6 +56,7 @@ class PythonAstREPLTool(BaseTool):
         "make sure it does not look abbreviated before using it in your answer."
         "Use this tool to answer quantitative finance questions about cryptocurrency prices. such as 'what was the average daily volatility of bitcoin over the last month?'"
         "This tool is NOT meant to be used to build portfolios."
+        "If the user wants to do partial autocorrelation function (PACF) and build an autoregressive (AR) mode then use this tool."
     )
     globals: Optional[Dict] = Field(default_factory=dict)
     locals: Optional[Dict] = Field(default_factory=dict)

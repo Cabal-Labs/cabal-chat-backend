@@ -63,6 +63,7 @@ class BalanceTool(BaseTool):
         "When you pass the json in, make sure its a string. Do not include ```json```"
         "Use this tool to make check these balances."
         "In the return you will get an array of tokens and their balances along with the token address. When you respond you should give this information in a human readable way."
+        "When you get the result, you must use the decimal value in the result to format the balance correctly."
     )
     
     globals: Optional[Dict] = Field(default_factory=dict)
@@ -90,7 +91,7 @@ class BalanceTool(BaseTool):
         try:
             print("RUNNING THE BALANCE TOOOL!!!!!")
             
-            query=clean_json(query)
+           # query=clean_json(query)
             
             wallet_address = "0x8cF84867ba54bd078F678fb276BB1a103efce7d3"
        
